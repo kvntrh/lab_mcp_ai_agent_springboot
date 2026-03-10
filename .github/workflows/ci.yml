@@ -10,9 +10,13 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: agent
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      GITHUB_OWNER: ${{ secrets.GH_OWNER }}
+      GITHUB_REPO: ${{ secrets.GH_REPO }}
+      MCP_BASE_URL: http://localhost:8081
+      MCP_PATH: /mcp
 
     steps:
       - uses: actions/checkout@v4
@@ -25,7 +29,7 @@ jobs:
           cache: gradle
 
       - name: Grant execute permission
-        run: chmod +x gradlew
+        run: chmod +x agent/gradlew
 
       - name: Build & Test
-        run: ./gradlew --no-daemon clean test
+        run: agent/gradlew --no-daemon -p agent clean test
